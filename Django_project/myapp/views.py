@@ -6,28 +6,28 @@ from django.urls import reverse
 
 
 def index(request):
-    return render(request, 'index.html', {'content': 'Information about index.html'})
+    return render(request, 'index.html', {'text': 'Information about index.html'})
 
 
 def article(request):
-    return render(request, 'article.html', {'content': 'Hello article.html'})
+    return render(request, 'article.html', {'text': 'Hello article.html'})
 
 
 def article_archive(request):
-    return render(request, 'article_archive.html', {'content': 'Watch this page'})
+    return render(request, 'article_archive.html', {'text': 'Watch this page'})
 
 
 def users(request):
-    return render(request, 'users.html', {'content': 'here file users.html'})
+    return render(request, 'users.html', {'text': 'here file users.html'})
 
 
 def article_detail(request, article_number):
-    return render(request, 'article_detail.html', {'content': 'Hi Article_detail!', 'article_number': article_number})
+    return render(request, 'article_detail.html', {'text': 'Hi Article_detail!', 'article_number': article_number})
 
 
-def article_archive_number(request, article_number):
+def article_archive_number(request):
     return render(request, 'article_archive_number.html',
-                  {'content': 'Your on the article_archive_number page'})
+                  {'text': 'Your on the article_archive_number page'})
 
 
 def article_with_slug(request, article_number, slug_text=None):
