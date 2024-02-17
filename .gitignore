@@ -1,0 +1,14 @@
+logs/
+temp/
+*.log
+.env
+*.env
+*.sqlite3
+*.db
+*.class
+*.pyc
+/build/
+*.tmp
+.idea/
+__pycache__/
+venv/
