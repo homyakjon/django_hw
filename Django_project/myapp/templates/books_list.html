@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Catalog Books</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"/>
+</head>
+<body>
+    <h1>Catalog Books:</h1>
+    <ul>
+        {% for book in books %}
+            <li class="book">
+                <h3><span class="book-title">{{ book.title }}</span> - <span class="author-name">
+                {{ book.authors.name }}</span></h3>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
