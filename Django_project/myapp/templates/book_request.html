@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Books List</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"/>
+</head>
+<body>
+    <h1>Books List:</h1>
+    <ul>
+        {% for book in books %}
+            <li>{{ book.title }} - {{ book.authors.all|join:", " }}</li>
+        {% endfor %}
+    </ul>
+
+    {% if reader %}
+        <p>Книга взята читателем: {{ reader.name }}</p>
+    {% else %}
+
+        <h2>Choose a Book:</h2>
+        <form method="post" action="{% url 'book_request' %}">
+            {% csrf_token %}
+            <label for="book-title">Book Title:</label>
+            <input type="text" id="book-title" name="book-title" required><br>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required><br>
+            <label for="availability">Availability:</label>
+            <select id="availability" name="availability">
+                <option value="available">Available</option>
+                <option value="unavailable">Unavailable</option>
+            </select><br>
+            <button type="submit">Submit</button>
+        </form>
+    {% endif %}
+    <h2><a href="{% url 'index' %}">home page</a></h2>
+</body>
+</html>
