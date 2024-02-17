@@ -1,0 +1,10 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/styles.css' %}"/>
+{% block content %}
+    <div class="content-container">
+        <h1>{{ title }}</h1>
+    </div>
+    <h2><a href="{% url 'random_article_slug' %}">random_article_slug</a></h2>
+    <h2><a href="{% url 'random_article' %}">random_article</a></h2>
+{% endblock %}

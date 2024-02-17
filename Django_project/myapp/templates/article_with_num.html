@@ -1,0 +1,12 @@
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+{% endif %}
+
+    {% if num_text %}
+        {% include 'num_content.html' %}
+    {% endif %}
+
+{% endblock %}
