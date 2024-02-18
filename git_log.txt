@@ -1,18 +1,45 @@
-Last five comments objects:
-this my content
-here i am
-i like play to guitare
-i run to Finish
-It is now i am a Middle but i want become Senior
 
-Last five comments text:
-this my content
-here i am
-i like play to guitare
-i run to Finish
-It is now i am a Middle but i want become Senior
+Type 'manage.py help <subcommand>' for help on a specific subcommand.
 
-Comments before the latest article by the author with the last alphabetically ordered username:
-I like american rock
-hello
+Available subcommands:
 
+[auth]
+    changepassword
+    createsuperuser
+
+[contenttypes]
+    remove_stale_contenttypes
+
+[django]
+    check
+    compilemessages
+    createcachetable
+    dbshell
+    diffsettings
+    dumpdata
+    flush
+    inspectdb
+    loaddata
+    makemessages
+    makemigrations
+    migrate
+    optimizemigration
+    sendtestemail
+    shell
+    showmigrations
+    sqlflush
+    sqlmigrate
+    sqlsequencereset
+    squashmigrations
+    startapp
+    startproject
+    test
+    testserver
+
+[sessions]
+    clearsessions
+
+[staticfiles]
+    collectstatic
+    findstatic
+    runserver
