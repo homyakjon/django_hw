@@ -1,0 +1,23 @@
+Oliver
+Jake
+Connor
+Liam
+Harry
+Mason
+Created article Article object (73)
+Created article Article object (74)
+Created article Article object (75)
+Created article Article object (76)
+Created article Article object (77)
+Created article Article object (78)
+comment one: Hello Rock n roll
+comment two: Animal jazz
+comment three: Rammstein
+comment four: Manowar
+comment five: Scorpions
+comment six: WigWam
+<QuerySet [<Comment: WigWam>, <Comment: Scorpions>, <Comment: Manowar>, <Comment: Rammstein>, <Comment: Animal jazz>]>
+['We are drawing a picture', 'I know Elvis', 'Hello everybody', 'You already on the Finish', 'I am a Middle and you Junior']
+deleted comments: <QuerySet []>
+Article object (73)
+<QuerySet []>
