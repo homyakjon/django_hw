@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <title>Search Comments</title>
+</head>
+<body>
+    <h1>Search Comments</h1>
+    <form action="{% url 'search_comments' %}" method="GET">
+        <label for="search_text">Search Text:</label>
+        <input type="text" id="search_text" name="search_text" value="{% if search_text %}{{ search_text }}{% endif %}">
+        <label for="my_comments">My Comments:</label>
+        <input type="checkbox" id="my_comments" name="my_comments">
+        <button type="submit">Search</button>
+    </form>
+</body>
+</html>
