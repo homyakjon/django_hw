@@ -1,9 +1,10 @@
 import random
 import string
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from myapp.models import Authors, Books, Book, ReaderInfo, Article, Comment
-from myapp.forms import CommentForm
+from myapp.forms import CommentForm, UserLoginForm, UserRegisterForm, ChangePasswordForm
 from django.contrib.auth.models import User
 from .forms import RecruiterForm
 from django.contrib import messages
@@ -167,7 +168,7 @@ def blog(request):
 def recruiter_form_view(request):
     if request.method == 'POST':
         form = RecruiterForm(request.POST)
-        if form.is_valid() and form.recruiter_validate():
+        if form.is_valid():
             return redirect('success')
         else:
             messages.error(request, 'No form correct')
@@ -181,23 +182,29 @@ def success(request):
     return render(request, 'success_page.html')
 
 
+def register_view(request):
+    if request.method == 'POST':
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+        return redirect('index')
+    else:
+        form = UserRegisterForm()
+    return render(request, 'register.html', {'form': form})
+
+
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
+        form = UserLoginForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
             login(request, user)
             return redirect('index')
         else:
-            if User.objects.filter(username=username).exists():
-                return render(request, 'login.html', {'error_message': 'Invalid password'})
-            else:
-                new_user = User.objects.create_user(username=username, password=password)
-                login(request, new_user)
-                return redirect('index')
+            form.add_error(None, 'Invalid username or password.')
     else:
-        return render(request, 'login.html')
+        form = UserLoginForm()
+    return render(request, 'login.html', {'form': form})
 
 
 def logout_view(request):
@@ -205,56 +212,36 @@ def logout_view(request):
     return redirect('login')
 
 
-def register_view(request):
-    if request.user.is_authenticated:
-        if request.method == 'POST':
-            username = request.POST.get('username')
-            password = request.POST.get('password')
-            email = request.POST.get('email')
-            if not User.objects.filter(username=username).exists():
-                user = User.objects.create_user(username=username, email=email)
-                user.set_password(password)
+@login_required(login_url='login')
+def change_password_view(request):
+    if request.method == 'POST':
+        form = ChangePasswordForm(request.POST)
+        if form.is_valid():
+            current_password = form.cleaned_data['current_password']
+            new_password = form.cleaned_data['new_password1']
+
+            user = authenticate(username=request.user.username, password=current_password)
+            if user is not None:
+                user.set_password(new_password)
                 user.save()
+                login(request, user)
                 return redirect('index')
             else:
-                return render(request, 'register.html', {'error_message': 'there is already a user with the same name'})
-        else:
-            return render(request, 'register.html')
+                form.add_error('current_password', 'Неверный текущий пароль.')
     else:
-        return redirect('login')
+        form = ChangePasswordForm()
+
+    return render(request, 'change_password.html', {'form': form})
 
 
-def change_password_view(request):
-    if not request.user.is_authenticated:
-        return redirect('login')
-
-    if request.method == 'POST':
-        current_password = request.POST.get('current_password')
-        new_password1 = request.POST.get('new_password1')
-        new_password2 = request.POST.get('new_password2')
-
-        if new_password1 != new_password2:
-            return render(request, 'change_password.html', {'error_message': 'Password mismatch'})
-
-        user = authenticate(username=request.user.username, password=current_password)
-        if user is not None:
-            user.set_password(new_password1)
-            user.save()
-            login(request, user)
-            return redirect('index')
-        else:
-            return render(request, 'change_password.html', {'error_message': 'Incorrect password'})
-    else:
-        return render(request, 'change_password.html')
-
-
+@login_required(login_url='login')
 def search_comments(request):
     search_text = request.GET.get('search_text')
     my_comments = request.GET.get('my_comments')
 
     comments = Comment.objects.filter(content__icontains=search_text) if search_text else Comment.objects.all()
 
-    if my_comments and request.user.is_authenticated:
+    if my_comments:
         comments = comments.filter(author=request.user)
 
     context = {'comments': comments, 'search_text': search_text, 'my_comments': my_comments}
