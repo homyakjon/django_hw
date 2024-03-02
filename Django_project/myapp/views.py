@@ -1,8 +1,9 @@
 import random
 import string
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from myapp.models import Authors, Books, Book, ReaderInfo, Article, Comment
 from myapp.forms import CommentForm, UserLoginForm, UserRegisterForm, ChangePasswordForm
 from django.contrib.auth.models import User
@@ -166,15 +167,9 @@ def blog(request):
 
 
 def recruiter_form_view(request):
-    if request.method == 'POST':
-        form = RecruiterForm(request.POST)
-        if form.is_valid():
-            return redirect('success')
-        else:
-            messages.error(request, 'No form correct')
-    else:
-        form = RecruiterForm()
-
+    form = RecruiterForm(request.POST or None)
+    if form.is_valid():
+        return redirect('success')
     return render(request, 'recruiter_form.html', {'form': form})
 
 
@@ -183,53 +178,34 @@ def success(request):
 
 
 def register_view(request):
-    if request.method == 'POST':
-        form = UserRegisterForm(request.POST)
-        if form.is_valid():
-            form.save()
+    form = UserRegisterForm(request.POST)
+    if form.is_valid():
+        form.save()
         return redirect('index')
-    else:
-        form = UserRegisterForm()
     return render(request, 'register.html', {'form': form})
 
 
 def login_view(request):
-    if request.method == 'POST':
-        form = UserLoginForm(request, data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect('index')
-        else:
-            form.add_error(None, 'Invalid username or password.')
-    else:
-        form = UserLoginForm()
+    form = UserLoginForm(request.POST)
+    if form.is_valid():
+        return redirect('https://www.youtube.com/')
     return render(request, 'login.html', {'form': form})
 
 
-def logout_view(request):
+def logo(request):
     logout(request)
-    return redirect('login')
+    return redirect('index')
 
 
 @login_required(login_url='login')
 def change_password_view(request):
-    if request.method == 'POST':
-        form = ChangePasswordForm(request.POST)
-        if form.is_valid():
-            current_password = form.cleaned_data['current_password']
-            new_password = form.cleaned_data['new_password1']
-
-            user = authenticate(username=request.user.username, password=current_password)
-            if user is not None:
-                user.set_password(new_password)
-                user.save()
-                login(request, user)
-                return redirect('index')
-            else:
-                form.add_error('current_password', 'Неверный текущий пароль.')
-    else:
-        form = ChangePasswordForm()
+    form = ChangePasswordForm(request.user, request.POST or None)
+    if form.is_valid():
+        user = request.user
+        new_password = form.cleaned_data['new_password1']
+        user.set_password(new_password)
+        user.save()
+        return redirect('index')
 
     return render(request, 'change_password.html', {'form': form})
 
